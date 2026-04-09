@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CalcNest - Calculator Hub</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#101a2f;
+      --panel2:#16233f;
+      --card:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.10);
+      --text:#eef4ff;
+      --muted:#9eb0d2;
+      --accent:#60a5fa;
+      --accent2:#34d399;
+      --shadow:0 18px 40px rgba(0,0,0,.28);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left,#19325d 0%,transparent 28%),
+        radial-gradient(circle at top right,#0f766e 0%,transparent 22%),
+        linear-gradient(180deg,#08101d 0%,#0d1728 100%);
+    }
+    .wrap{max-width:1180px;margin:0 auto;padding:18px 14px 40px}
+    .hero{
+      background:linear-gradient(135deg,rgba(96,165,250,.18),rgba(52,211,153,.10));
+      border:1px solid var(--border);
+      border-radius:28px;
+      padding:24px 18px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(12px);
+    }
+    .brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .logo{
+      width:52px;height:52px;border-radius:18px;display:grid;place-items:center;
+      font-weight:800;font-size:1.3rem;color:#06111f;
+      background:linear-gradient(135deg,#60a5fa,#34d399);
+      box-shadow:0 10px 25px rgba(96,165,250,.35);
+    }
+    h1{margin:0;font-size:2rem}
+    .subtitle{margin:6px 0 0;color:var(--muted);line-height:1.5}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .toolbar button{
+      width:auto;padding:12px 16px;border-radius:999px;border:1px solid var(--border);
+      background:rgba(255,255,255,.05);color:var(--text);cursor:pointer;font-weight:700;
+    }
+    .toolbar button.active,.toolbar button:hover{
+      background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:transparent;
+    }
+    .ad-box{
+      margin:18px 0;border-radius:18px;padding:16px;text-align:center;
+      color:#fde68a;background:linear-gradient(135deg,rgba(245,158,11,.16),rgba(234,179,8,.08));
+      border:1px dashed rgba(250,204,21,.45);font-weight:700;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+      gap:18px;margin-top:14px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+    }
+    .card.hidden{display:none}
+    .card h2{margin:0 0 6px;font-size:1.15rem}
+    .desc{margin:0 0 14px;color:var(--muted);font-size:.93rem;line-height:1.45}
+    .field-label{
+      display:block;text-align:left;font-size:.9rem;color:#c8d4ea;
+      margin-top:10px;margin-bottom:6px;font-weight:700;
+    }
+    input,select,button{
+      width:100%;
+      font-size:1rem;border-radius:14px;
+    }
+    input,select{
+      padding:13px 14px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(8,15,28,.62);color:var(--text);outline:none;
+    }
+    input::placeholder{color:#7f93b7}
+    input:focus,select:focus{
+      border-color:rgba(96,165,250,.9);
+      box-shadow:0 0 0 3px rgba(96,165,250,.16);
+    }
+    .action{
+      margin-top:14px;padding:13px 16px;border:none;
+      background:linear-gradient(135deg,#2563eb,#3b82f6);
+      color:#fff;font-weight:800;cursor:pointer;
+    }
+    .action:hover{transform:translateY(-1px)}
+    .result{
+      margin-top:14px;padding:14px;border-radius:16px;
+      background:rgba(15,23,42,.68);border:1px solid rgba(255,255,255,.08);
+      min-height:56px;text-align:left;
+    }
+    .result-title{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    .result-value{margin-top:6px;font-size:1.15rem;font-weight:800}
+    .small{font-size:.92rem;color:var(--muted);margin-top:6px;line-height:1.4}
+    footer{text-align:center;color:var(--muted);padding:24px 6px 8px}
+    @media (max-width:700px){
+      h1{font-size:1.7rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="brand">
+        <div class="logo">∑</div>
+        <div>
+          <h1>CalcNest</h1>
+          <p class="subtitle">Fast, simple calculators with an easy UI. Basic, scientific, percentage, BMI, age, discount, and marks tools in one place.</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button class="tab active" data-target="all">All</button>
+        <button class="tab" data-target="basic">Basic</button>
+        <button class="tab" data-target="scientific">Scientific</button>
+        <button class="tab" data-target="percentage">Percentage</button>
+        <button class="tab" data-target="marks">Marks</button>
+        <button class="tab" data-target="discount">Discount</button>
+        <button class="tab" data-target="bmi">BMI</button>
+        <button class="tab" data-target="age">Age</button>
+      </div>
+    </section>
+
+    <div class="ad-box">Top Ad Space</div>
+
+    <section class="grid" id="grid">
+
+      <article class="card" data-card="basic">
+        <h2>Basic Calculator</h2>
+        <p class="desc">Quick add, subtract, multiply, or divide two numbers.</p>
+        <label class="field-label">First number</label>
+        <input type="number" id="basic1" placeholder="Enter first number">
+        <label class="field-label">Operation</label>
+        <select id="basicOp">
+          <option value="+">Add (+)</option>
+          <option value="-">Subtract (-)</option>
+          <option value="*">Multiply (×)</option>
+          <option value="/">Divide (÷)</option>
+        </select>
+        <label class="field-label">Second number</label>
+        <input type="number" id="basic2" placeholder="Enter second number">
+        <button class="action" onclick="basicCalc()">Calculate</button>
+        <div class="result" id="basicResult">
+          <div class="result-title">Result</div>
+          <div class="result-value">Waiting for input</div>
+        </div>
+      </article>
+
+      <article class="card" data-card="scientific">
+        <h2>Scientific Calculator</h2>
+        <p class="desc">Square, square root, sine, cosine, tangent, and logarithm.</p>
+        <label class="field-label">Number</label>
+        <input type="number" id="sciValue" placeholder="Enter a number">
+        <label class="field-label">Function</label>
+        <select id="sciOp">
+          <option value="square">x²</option>
+          <option value="sqrt">√x</option>
+          <option value="sin">sin(x)</option>
+          <option value="cos">cos(x)</option>
+          <option value="tan">tan(x)</option>
+          <option value="log">log10(x)</option>
+        </select>
+        <button class="action" onclick="scientificCalc()">Calculate</button>
+        <div class="result" id="sciResult">
+          <div class="result-title">Result</div>
+          <div class="result-value">Waiting for input</div>
+          <div class="small">Trig functions use degrees.</div>
+        </div>
+      </article>
+
+      <article class="card" data-card="percentage">
+        <h2>Percentage Calculator</h2>
+        <p class="desc">Find what percent one number is of another.</p>
+        <label class="field-label">Value</label>
+        <input type="number" id="percentPart" placeholder="Enter value">
+        <label class="field-label">Total</label>
+        <input type="number" id="percentTotal" placeholder="Enter total">
+        <button class="action" onclick="percentageCalc()">Calculate</button>
+        <div class="result" id="percentResult">
+          <div class="result-title">Result</div>
+          <div class="result-value">Waiting for input</div>
+        </div>
+      </article>
+
+      <article class="card" data-card="marks">
+        <h2>Marks to Percentage</h2>
+        <p class="desc">Convert marks obtained into a percentage.</p>
+        <label class="field-label">Marks obtained</label>
+        <input type="number" id="marksObtained" placeholder="Enter obtained marks">
+        <label class="field-label">Total marks</label>
+        <input type="number" id="marksTotal" placeholder="Enter total marks">
+        <button class="action" onclick="marksCalc()">Calculate</button>
+        <div class="result" id="marksResult">
+          <div class="result-title">Result</div>
+          <div class="result-value">Waiting for input</div>
+        </div>
+      </article>
+
+      <article class="card" data-card="discount">
+        <h2>Discount Calculator</h2>
+        <p class="desc">Calculate savings and final price after discount.</p>
+        <label class="field-label">Original price</label>
+        <input type="number" id="originalPrice" placeholder="Enter original price">
+        <label class="field-label">Discount percent</label>
+        <input type="number" id="discountPercent" placeholder="Enter discount %">
+        <button class="action" onclick="discountCalc()">Calculate</button>
+        <div class="result" id="discountResult">
+          <div class="result-title">Result</div>
+          <div class="result-value">Waiting for input</div>
+        </div>
+      </article>
+
+      <article class="card" data-card="bmi">
+        <h2>BMI Calculator</h2>
+        <p class="desc">Check body mass index using height and weight.</p>
+        <label class="field-label">Weight (kg)</label>
+        <input type="number" id="weight" placeholder="Enter weight in kg">
+        <label class="field-label">Height (cm)</label>
+        <input type="number" id="height" placeholder="Enter height in cm">
+        <button class="action" onclick="bmiCalc()">Calculate</button>
+        <div class="result" id="bmiResult">
+          <div class="result-title">Result</div>
+          <div class="result-value">Waiting for input</div>
+        </div>
+      </article>
+
+      <article class="card" data-card="age">
+        <h2>Age Calculator</h2>
+        <p class="desc">Calculate age from date of birth.</p>
+        <label class="field-label">Date of birth</label>
+        <input type="date" id="dob">
+        <button class="action" onclick="ageCalc()">Calculate</button>
+        <div class="result" id="ageResult">
+          <div class="result-title">Result</div>
+          <div class="result-value">Waiting for input</div>
+        </div>
+      </article>
+
+    </section>
+
+    <div class="ad-box">Bottom Ad Space</div>
+
+    <footer>
+      CalcNest © 2026
+    </footer>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const cards = document.querySelectorAll('.card');
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        const target = btn.dataset.target;
+        cards.forEach(card => {
+          if (target === 'all' || card.dataset.card === target) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    function setResult(id, main, extra = '') {
+      const box = document.getElementById(id);
+      box.innerHTML = `
+        <div class="result-title">Result</div>
+        <div class="result-value">${main}</div>
+        ${extra ? `<div class="small">${extra}</div>` : ''}
+      `;
+    }
+
+    function basicCalc() {
+      const a = parseFloat(document.getElementById('basic1').value);
+      const b = parseFloat(document.getElementById('basic2').value);
+      const op = document.getElementById('basicOp').value;
+      if (Number.isNaN(a) || Number.isNaN(b)) {
+        setResult('basicResult', 'Enter both numbers');
+        return;
+      }
+      let result;
+      if (op === '+') result = a + b;
+      if (op === '-') result = a - b;
+      if (op === '*') result = a * b;
+      if (op === '/') {
+        if (b === 0) {
+          setResult('basicResult', 'Cannot divide by zero');
+          return;
+        }
+        result = a / b;
+      }
+      setResult('basicResult', result);
+    }
+
+    function scientificCalc() {
+      const x = parseFloat(document.getElementById('sciValue').value);
+      const op = document.getElementById('sciOp').value;
+      if (Number.isNaN(x)) {
+        setResult('sciResult', 'Enter a valid number', 'Trig functions use degrees.');
+        return;
+      }
+      const rad = x * Math.PI / 180;
+      let result;
+      if (op === 'square') result = x * x;
+      if (op === 'sqrt') {
+        if (x < 0) {
+          setResult('sciResult', 'Square root needs 0 or more');
+          return;
+        }
+        result = Math.sqrt(x);
+      }
+      if (op === 'sin') result = Math.sin(rad);
+      if (op === 'cos') result = Math.cos(rad);
+      if (op === 'tan') result = Math.tan(rad);
+      if (op === 'log') {
+        if (x <= 0) {
+          setResult('sciResult', 'Log needs a number greater than 0');
+          return;
+        }
+        result = Math.log10(x);
+      }
+      setResult('sciResult', Number(result).toFixed(6), 'Trig functions use degrees.');
+    }
+
+    function percentageCalc() {
+      const part = parseFloat(document.getElementById('percentPart').value);
+      const total = parseFloat(document.getElementById('percentTotal').value);
+      if (Number.isNaN(part) || Number.isNaN(total) || total === 0) {
+        setResult('percentResult', 'Enter valid numbers');
+        return;
+      }
+      setResult('percentResult', ((part / total) * 100).toFixed(2) + '%');
+    }
+
+    function marksCalc() {
+      const obtained = parseFloat(document.getElementById('marksObtained').value);
+      const total = parseFloat(document.getElementById('marksTotal').value);
+      if (Number.isNaN(obtained) || Number.isNaN(total) || total === 0) {
+        setResult('marksResult', 'Enter valid marks');
+        return;
+      }
+      setResult('marksResult', ((obtained / total) * 100).toFixed(2) + '%');
+    }
+
+    function discountCalc() {
+      const price = parseFloat(document.getElementById('originalPrice').value);
+      const discount = parseFloat(document.getElementById('discountPercent').value);
+      if (Number.isNaN(price) || Number.isNaN(discount)) {
+        setResult('discountResult', 'Enter valid values');
+        return;
+      }
+      const saved = (price * discount) / 100;
+      const finalPrice = price - saved;
+      setResult('discountResult', 'Final price: ' + finalPrice.toFixed(2), 'You save: ' + saved.toFixed(2));
+    }
+
+    function bmiCalc() {
+      const weight = parseFloat(document.getElementById('weight').value);
+      const heightCm = parseFloat(document.getElementById('height').value);
+      if (Number.isNaN(weight) || Number.isNaN(heightCm) || heightCm === 0) {
+        setResult('bmiResult', 'Enter valid height and weight');
+        return;
+      }
+      const heightM = heightCm / 100;
+      const bmi = weight / (heightM * heightM);
+      let status = 'Obese';
+      if (bmi < 18.5) status = 'Underweight';
+      else if (bmi < 25) status = 'Normal';
+      else if (bmi < 30) status = 'Overweight';
+      setResult('bmiResult', bmi.toFixed(2), 'Category: ' + status);
+    }
+
+    function ageCalc() {
+      const dobValue = document.getElementById('dob').value;
+      if (!dobValue) {
+        setResult('ageResult', 'Select your date of birth');
+        return;
+      }
+      const dob = new Date(dobValue);
+      const today = new Date();
+      let age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+      }
+      setResult('ageResult', age + ' years');
+    }
+  </script>
+</body>
+</html>
